@@ -13,7 +13,6 @@ const Multer = require("multer");
 const helmet = require("helmet");
 const compression = require("compression");
 const cloudinary = require("cloudinary");
-const path = require("path");
 const { frontendUrl } = require("./helper.js");
 // All imports end here---
 
@@ -432,12 +431,9 @@ app.get("/search", async (req, res) => {
     });
   }
 });
-// static file handling--
-const __variableOfChoice = path.resolve();
-app.use(express.static(path.join(__variableOfChoice, "/frontend/dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__variableOfChoice, "frontend", "dist", "index.html"));
+// test routes--
+app.get("/", (req, res) => {
+  res.send("hello world!");
 });
 
 // server creation---
