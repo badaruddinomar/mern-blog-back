@@ -18,15 +18,7 @@ const { frontendUrl } = require("./helper.js");
 
 const app = express();
 const salt = bcrypt.genSaltSync(10);
-const corsOptions = {
-  origin: frontendUrl,
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // optionsSuccessStatus: 204,
-  optionsSuccessStatus: 200,
-  allowedHeaders: "Content-Type,Authorization",
-};
-app.use(cors(corsOptions));
+app.use(cors({ credentials: true, origin: frontendUrl }));
 app.use(helmet());
 app.use(compression());
 app.use(express.json({ limit: "50mb" }));
