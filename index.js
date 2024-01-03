@@ -18,15 +18,15 @@ const { frontendUrl } = require("./helper.js");
 
 const app = express();
 const salt = bcrypt.genSaltSync(10);
-const corsOptions = {
-  origin: frontendUrl,
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // optionsSuccessStatus: 204,
-  optionsSuccessStatus: 200,
-  allowedHeaders: "Content-Type,Authorization",
-};
-app.use(cors(corsOptions));
+// Enable CORS for a specific origin and allow PATCH method
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", frontendUrl);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+  next();
+});
+
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
