@@ -23,8 +23,8 @@ const corsOptions = {
   origin: frontendUrl,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // optionsSuccessStatus: 204,
-  optionsSuccessStatus: 200,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
   allowedHeaders: "Content-Type,Authorization",
 };
 app.use(cors(corsOptions));
