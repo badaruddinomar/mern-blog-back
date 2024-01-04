@@ -23,14 +23,20 @@ const corsOptions = {
   origin: frontendUrl,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  optionsSuccessStatus: 204,
-  allowedHeaders: "Content-Type,Authorization",
+  // optionsSuccessStatus: 204,
+  // allowedHeaders: "Content-Type,Authorization",
 };
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
 app.use(cookieParser());
+// handling uncaught exceptions--
+process.on("uncaughtException", (err) => {
+  console.log(`error: ${err.message}`);
+  console.log(`Uncaught exception: ${err.stack}`);
+  process.exit(1);
+});
 
 // some secret variables--
 const db = process.env.DB;
@@ -439,4 +445,13 @@ app.get("/", (req, res) => {
 // server creation---
 app.listen(process.env.PORT || 4000, () => {
   console.log(`Listening on port 4000`);
+});
+// unhandled promise rejection--
+process.on("unhandledRejection", (err) => {
+  console.log(`Error: ${err}`);
+  console.log(`Shuting down the server due to unhandled promise rejection!`);
+
+  server.close(() => {
+    process.exit(1);
+  });
 });
