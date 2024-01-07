@@ -26,15 +26,16 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   allowedHeaders: "Content-Type,Authorization",
 };
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+// parse application/json
+app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(compression());
 app.use(express.json());
 app.use(cookieParser());
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-// parse application/json
-app.use(bodyParser.json());
+
 // handling uncaught exceptions--
 process.on("uncaughtException", (err) => {
   console.log(`error: ${err.message}`);
