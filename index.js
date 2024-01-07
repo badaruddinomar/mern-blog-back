@@ -21,9 +21,7 @@ const salt = bcrypt.genSaltSync(10);
 const corsOptions = {
   origin: frontendUrl,
   credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  optionsSuccessStatus: 200 || 204,
-  allowedHeaders: "Content-Type,Authorization",
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 app.use(helmet());
