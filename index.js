@@ -21,10 +21,9 @@ let cache = apicache.middleware;
 const app = express();
 const salt = bcrypt.genSaltSync(10);
 const corsOptions = {
-  origin: frontendUrl,
+  origin: "https://blogo-1tkw.onrender.com",
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  optionsSuccessStatus: 204,
   optionsSuccessStatus: 200,
   allowedHeaders: "Content-Type,Authorization",
 };
@@ -163,7 +162,7 @@ app.post("/login", async (req, res) => {
 });
 
 // home routes--
-app.get("/profile", cache("5 minutes"), async (req, res) => {
+app.get("/profile", async (req, res) => {
   try {
     const { token } = req.cookies;
     jwt.verify(token, jwtSecret, {}, (err, info) => {
@@ -179,7 +178,7 @@ app.get("/profile", cache("5 minutes"), async (req, res) => {
 });
 
 // userDetails route---
-app.get("/userDetails/:id", cache("5 minutes"), async (req, res) => {
+app.get("/userDetails/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const userDoc = await User.findById(id);
@@ -198,7 +197,7 @@ app.get("/userDetails/:id", cache("5 minutes"), async (req, res) => {
   }
 });
 // user-profile-data routes --
-app.get("/userProfile/:id", cache("5 minutes"), async (req, res) => {
+app.get("/userProfile/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const userDoc = await User.findById(id);
@@ -322,7 +321,7 @@ app.post("/createPost", upload.single("file"), async (req, res) => {
 });
 
 // get post data --
-app.get("/post", cache("5 minutes"), async (req, res) => {
+app.get("/post", async (req, res) => {
   try {
     const postDoc = await Post.find()
       .populate("author", {
@@ -344,7 +343,7 @@ app.get("/post", cache("5 minutes"), async (req, res) => {
 });
 
 // get single post data --
-app.get("/singlePost/:id", cache("5 minutes"), async (req, res) => {
+app.get("/singlePost/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const postDoc = await Post.findById(id).populate("author", {
@@ -362,7 +361,7 @@ app.get("/singlePost/:id", cache("5 minutes"), async (req, res) => {
 });
 
 // get post data for editing--
-app.get("/editPost/:id", cache("5 minutes"), async (req, res) => {
+app.get("/editPost/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const postDoc = await Post.findById(id).populate("author", {
