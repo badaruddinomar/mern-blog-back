@@ -21,7 +21,7 @@ let cache = apicache.middleware;
 const app = express();
 const salt = bcrypt.genSaltSync(10);
 const corsOptions = {
-  origin: "https://blogo-1tkw.onrender.com",
+  origin: frontendUrl,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   optionsSuccessStatus: 200,
@@ -229,7 +229,7 @@ app.get("/userProfile/:id", async (req, res) => {
 // user-details-edit page--
 app.patch("/userDetailsEdit/:id", upload.single("file"), async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     let cldRes;
     if (req.file) {
       const b64 = Buffer.from(req.file.buffer).toString("base64");
