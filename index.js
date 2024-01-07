@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Multer = require("multer");
+const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const compression = require("compression");
 const cloudinary = require("cloudinary");
@@ -21,8 +22,7 @@ const corsOptions = {
   origin: frontendUrl,
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // optionsSuccessStatus: 204,
-  optionsSuccessStatus: 200,
+  optionsSuccessStatus: 200 || 204,
   allowedHeaders: "Content-Type,Authorization",
 };
 app.use(cors(corsOptions));
@@ -30,6 +30,10 @@ app.use(helmet());
 app.use(compression());
 app.use(express.json());
 app.use(cookieParser());
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+// parse application/json
+app.use(bodyParser.json());
 // handling uncaught exceptions--
 process.on("uncaughtException", (err) => {
   console.log(`error: ${err.message}`);
