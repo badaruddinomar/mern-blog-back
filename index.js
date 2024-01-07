@@ -1,8 +1,8 @@
 // All imports start from here---
 const express = require("express");
 const dotenv = require("dotenv");
-const cors = require("cors");
 dotenv.config();
+const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User.js");
 const Post = require("./models/Posts.js");
@@ -15,14 +15,16 @@ const helmet = require("helmet");
 const compression = require("compression");
 const cloudinary = require("cloudinary");
 const { frontendUrl } = require("./helper.js");
+const apicache = require("apicache");
+let cache = apicache.middleware;
 // All imports end here---
 const app = express();
 const salt = bcrypt.genSaltSync(10);
 const corsOptions = {
   origin: frontendUrl,
   credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  // optionsSuccessStatus: 204,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  optionsSuccessStatus: 204,
   optionsSuccessStatus: 200,
   allowedHeaders: "Content-Type,Authorization",
 };
@@ -161,7 +163,7 @@ app.post("/login", async (req, res) => {
 });
 
 // home routes--
-app.get("/profile", async (req, res) => {
+app.get("/profile", cache("5 minutes"), async (req, res) => {
   try {
     const { token } = req.cookies;
     jwt.verify(token, jwtSecret, {}, (err, info) => {
@@ -177,7 +179,7 @@ app.get("/profile", async (req, res) => {
 });
 
 // userDetails route---
-app.get("/user-details/:id", async (req, res) => {
+app.get("/userDetails/:id", cache("5 minutes"), async (req, res) => {
   try {
     const { id } = req.params;
     const userDoc = await User.findById(id);
@@ -196,7 +198,7 @@ app.get("/user-details/:id", async (req, res) => {
   }
 });
 // user-profile-data routes --
-app.get("/user-profile/:id", async (req, res) => {
+app.get("/userProfile/:id", cache("5 minutes"), async (req, res) => {
   try {
     const { id } = req.params;
     const userDoc = await User.findById(id);
@@ -226,7 +228,7 @@ app.get("/user-profile/:id", async (req, res) => {
   }
 });
 // user-details-edit page--
-app.patch("/user-details-edit/:id", upload.single("file"), async (req, res) => {
+app.patch("/userDetailsEdit/:id", upload.single("file"), async (req, res) => {
   try {
     const { id } = req.params;
     let cldRes;
@@ -281,7 +283,7 @@ app.post("/logout", (req, res) => {
 });
 
 // create post routes--
-app.post("/create-post", upload.single("file"), async (req, res) => {
+app.post("/createPost", upload.single("file"), async (req, res) => {
   let cldRes;
   if (req.file) {
     const b64 = Buffer.from(req.file.buffer).toString("base64");
@@ -320,7 +322,7 @@ app.post("/create-post", upload.single("file"), async (req, res) => {
 });
 
 // get post data --
-app.get("/post", async (req, res) => {
+app.get("/post", cache("5 minutes"), async (req, res) => {
   try {
     const postDoc = await Post.find()
       .populate("author", {
@@ -342,7 +344,7 @@ app.get("/post", async (req, res) => {
 });
 
 // get single post data --
-app.get("/single-post/:id", async (req, res) => {
+app.get("/singlePost/:id", cache("5 minutes"), async (req, res) => {
   try {
     const { id } = req.params;
     const postDoc = await Post.findById(id).populate("author", {
@@ -360,7 +362,7 @@ app.get("/single-post/:id", async (req, res) => {
 });
 
 // get post data for editing--
-app.get("/edit-post/:id", async (req, res) => {
+app.get("/editPost/:id", cache("5 minutes"), async (req, res) => {
   try {
     const { id } = req.params;
     const postDoc = await Post.findById(id).populate("author", {
@@ -378,7 +380,7 @@ app.get("/edit-post/:id", async (req, res) => {
 });
 
 // edit single post --
-app.patch("/edit-post/:id", upload.single("file"), async (req, res) => {
+app.patch("/editPost/:id", upload.single("file"), async (req, res) => {
   try {
     const { id } = req.params;
     let cldRes;
@@ -417,7 +419,7 @@ app.patch("/edit-post/:id", upload.single("file"), async (req, res) => {
 });
 
 // search routes --
-app.get("/search", async (req, res) => {
+app.get("/search", cache("5 minutes"), async (req, res) => {
   try {
     const { search } = req.query;
 
