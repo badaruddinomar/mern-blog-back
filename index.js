@@ -25,7 +25,7 @@ const corsOptions = {
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 200,
-  allowedHeaders: "Content-Type,Authorization",
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
