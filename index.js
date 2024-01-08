@@ -227,7 +227,7 @@ app.get("/userProfile/:id", async (req, res) => {
   }
 });
 // user-details-edit page--
-app.patch("/userDetailsEdit/:id", upload.single("file"), async (req, res) => {
+app.put("/userDetailsEdit/:id", upload.single("file"), async (req, res) => {
   try {
     const { id } = req.body;
     let cldRes;
